@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inicio - AlertiBot</title>
+  <link rel="stylesheet" href="estilo.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://kit.fontawesome.com/a2e0e6bd63.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <!-- MENÚ SUPERIOR DE ACCIONES -->
+  <header class="acciones-superiores fade-in-down">
+    <div class="logo-header">
+      <img src="img/logo.jpg.png" alt="Logo principal" class="logo-header-img-izq" style="height: 120px; width: auto;">
+      <span>AlertiBot</span>
+    </div>
+    <div class="logo-header-der">
+      <img src="img/teschi.png" alt="Logo TESCHI" class="logo-header-img-der" style="height: 70px; width: auto;">
+    </div>
+  </header>
+  <div class="acciones-botones-banner">
+    <nav class="botones">
+      <a href="#mapa" class="btn btn-principal">Ver Mapa en Vivo</a>
+      <a href="https://t.me/tu_canal_telegram" target="_blank" class="btn btn-telegram">Unirme al Canal de Alertas (AlertiBot)</a>
+    </nav>
+  </div>
+
+  <!-- MENÚ LATERAL -->
+  <aside class="menu-lateral fade-in-left">
+    <input type="checkbox" id="menu-toggle">
+    <label for="menu-toggle" class="menu-icon">
+      <span class="menu-logo">
+        <img src="img/logo.jpg.png" alt="Logo" style="width:38px; height:38px; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.10); background:#fff; padding:2px; margin-right:8px; vertical-align:middle;">
+      </span>
+      <i class="fas fa-bars"></i>
+    </label>
+    <nav class="menu">
+      <a href="#inicio"><i class="fas fa-home"></i> Inicio</a>
+      <a href="#informacion"><i class="fas fa-info-circle"></i> Información</a>
+      <a href="#acerca"><i class="fas fa-users"></i> Acerca de</a>
+    </nav>
+  </aside>
+
+  <!-- SECCIÓN: BANNER PRINCIPAL -->
+  <section id="inicio" class="banner fade-in-up">
+    <div class="banner-contenido" style="display: flex; flex-direction: row; justify-content: center; align-items: stretch; gap: 32px; flex-wrap: wrap;">
+      <div style="flex:2; min-width: 260px;">
+        <h1>Reporta Inundaciones en Tiempo Real</h1>
+        <p class="banner-sub">Mantén Segura a tu Comunidad TESCHI en Chimalhuacán.</p>
+        <p class="banner-desc">Consulta el mapa con reportes de estudiantes y ciudadanos, evita zonas de riesgo y contribuye con tus propios avisos en segundos.</p>
+      </div>
+      <div class="banner-clima" style="flex:1; min-width: 220px; max-width: 340px; background: linear-gradient(135deg, #e6f0ff 0%, #b3cfff 100%); border-radius: 22px; box-shadow: 0 4px 24px rgba(37,99,235,0.13); padding: 26px 20px 20px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; border: 2.5px solid #90b4e6; position: relative; overflow: hidden;">
+        <div style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0;">
+          <svg width="100%" height="100%" viewBox="0 0 320 180" style="position:absolute; left:0; top:0; opacity:0.13;"><ellipse cx="240" cy="40" rx="80" ry="32" fill="#2563eb"/><ellipse cx="60" cy="140" rx="60" ry="22" fill="#b3cfff"/></svg>
+        </div>
+        <div id="clima-actual" style="text-align:center; z-index:1;">
+          <div style="font-size:2.3rem; font-weight:800; color:#2563eb; letter-spacing:1px; text-shadow:0 2px 8px #b3cfff80; display:flex; align-items:center; justify-content:center; gap:8px;">
+            <span id="clima-temp">--°C</span>
+            <span id="clima-icon" style="font-size:2.1rem;">🌡️</span>
+          </div>
+          <div style="font-size:1.13rem; color:#1e293b; margin-bottom:6px; font-weight:600; letter-spacing:0.2px;" id="clima-desc">Cargando...</div>
+        </div>
+        <div id="clima-fecha" style="font-size:0.99rem; color:#2563eb; margin-bottom:8px; font-weight:500; z-index:1; background:rgba(255,255,255,0.7); border-radius:8px; padding:2px 10px;">--</div>
+        <div id="clima-mini-pronostico" style="display:flex; gap:14px; justify-content:center; align-items:flex-end; z-index:1; width:100%; margin-top:6px;">
+          <!-- Mini pronóstico dinámico -->
+        </div>
+        <div style="font-size:0.93rem; color:#1e293b; opacity:0.7; margin-top:8px; z-index:1; text-align:center;">Actualizado en tiempo real<br><span style="color:#2563eb; font-weight:600;">Open-Meteo</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN: ¿CÓMO FUNCIONA? -->
+  <section class="funciona fade-in-up" id="informacion">
+    <h2>Es Simple: Consulta, Reporta y Protégete.</h2>
+    <div class="pasos anim-cascade">
+      <div class="paso">
+        <i class="fas fa-map-marker-alt"></i>
+        <h3>Consulta</h3>
+        <p>Mira el mapa interactivo con las zonas afectadas, actualizado al minuto por tus propios compañeros.</p>
+      </div>
+      <div class="paso">
+        <i class="fas fa-plus-circle"></i>
+        <h3>Reporta</h3>
+        <p>Regístrate y crea un reporte con la ubicación y el nivel de severidad. Tu aviso ayuda a todos.</p>
+      </div>
+      <div class="paso">
+        <i class="fas fa-bell"></i>
+        <h3>Recibe Alertas</h3>
+        <p>Te notificaremos si se detecta una situación crítica en tu zona registrada.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN: CARRUSEL DE IMÁGENES MEJORADO -->
+  <section class="carrusel-avanzado fade-in-up" style="display: flex; justify-content: center; align-items: center; min-height: 420px; margin-top: 30px;">
+    <div class="carousel-container" style="background: linear-gradient(135deg, #b3cfff 0%, #e6f0ff 100%); box-shadow: 0 8px 32px rgba(0,0,0,0.16); border-radius: 28px; padding: 40px 48px; max-width: 820px; width: 100%; display: flex; flex-direction: column; align-items: center; position: relative; border: 1.5px solid #90b4e6;">
+      <h2 style="margin-bottom: 22px; text-align: center; font-size: 2rem; font-weight: 700; color: #2563eb; letter-spacing: 0.5px;">Prevención y Apoyo Comunitario</h2>
+      <div class="carousel" style="position: relative; width: 100%; display: flex; justify-content: center; align-items: center; min-height: 440px;">
+        <div class="carousel-control prev" style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); z-index: 2; background: rgba(255,255,255,0.90); border-radius: 50%; width: 54px; height: 54px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; color: #2563eb; box-shadow: 0 2px 8px rgba(0,0,0,0.10); cursor: pointer; border: 1.5px solid #90b4e6; transition: background 0.2s;">
+          &#60;
+        </div>
+        <div class="carousel-inner" style="position: relative; width: 700px; height: 420px; display: flex; justify-content: center; align-items: center; overflow: hidden; border-radius: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.10); background: #e6f0ff;">
+          <div class="carousel-item">
+            <a href="https://www.icat.unam.mx/inundaciones-encharcamientos/" target="_blank" style="display: flex; flex-direction: column; align-items: center; height: 100%;">
+              <img src="img/evita.jpg" alt="Prevención Inundaciones" style="width: 650px; height: 340px; object-fit: cover; border-radius: 16px; box-shadow: 0 2px 16px rgba(37,99,235,0.10); border: 2.5px solid #90b4e6;">
+              <div class="carousel-caption" style="margin-top: 18px; background: rgba(37,99,235,0.10); color: #2563eb; font-size: 1.25rem; font-weight: 600; padding: 10px 28px; border-radius: 12px; box-shadow: 0 1px 6px rgba(0,0,0,0.07);">Prevención de Inundaciones</div>
+            </a>
+          </div>
+          <div class="carousel-item">
+            <a href="https://agua.edomex.gob.mx/atencion-emergencias" target="_blank" style="display: flex; flex-direction: column; align-items: center; height: 100%;">
+              <img src="img/centro1.png" alt="Centro de Ayuda" style="width: 650px; height: 340px; object-fit: cover; border-radius: 16px; box-shadow: 0 2px 16px rgba(37,99,235,0.10); border: 2.5px solid #90b4e6;">
+              <div class="carousel-caption" style="margin-top: 18px; background: rgba(37,99,235,0.10); color: #2563eb; font-size: 1.25rem; font-weight: 600; padding: 10px 28px; border-radius: 12px; box-shadow: 0 1px 6px rgba(0,0,0,0.07);">Centro de Ayuda</div>
+            </a>
+          </div>
+          <div class="carousel-item">
+            <a href="https://www.unicef.org/parenting/es/emergencias/como-protegerse-en-caso-de-inundacion" target="_blank" style="display: flex; flex-direction: column; align-items: center; height: 100%;">
+              <img src="img/que1.jpg" alt="Cómo Actuar" style="width: 650px; height: 340px; object-fit: cover; border-radius: 16px; box-shadow: 0 2px 16px rgba(37,99,235,0.10); border: 2.5px solid #90b4e6;">
+              <div class="carousel-caption" style="margin-top: 18px; background: rgba(37,99,235,0.10); color: #2563eb; font-size: 1.25rem; font-weight: 600; padding: 10px 28px; border-radius: 12px; box-shadow: 0 1px 6px rgba(0,0,0,0.07);">¿Cómo Actuar en Emergencias?</div>
+            </a>
+          </div>
+        </div>
+        <div class="carousel-control next" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); z-index: 2; background: rgba(255,255,255,0.90); border-radius: 50%; width: 54px; height: 54px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; color: #2563eb; box-shadow: 0 2px 8px rgba(0,0,0,0.10); cursor: pointer; border: 1.5px solid #90b4e6; transition: background 0.2s;">
+          &#62;
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN: MAPA -->
+  <section id="mapa" class="mapa fade-in-up">
+    <h2>Situación Actual en Chimalhuacán</h2>
+    <div id="map" class="mapa-principal">
+      <button id="contraer-mapa" class="btn-contraer-mapa" onclick="contraerMapa()" style="display:none;" title="Contraer mapa">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polyline points="10,22 16,16 22,22" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <polyline points="10,10 16,16 22,10" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </button>
+    </div>
+    <div class="map-controles">
+      <button id="expandir-mapa" class="btn-expandir" onclick="expandirMapa()">⤢ Expandir</button>
+    </div>
+    <p>Datos actualizados hace 2 minutos. 15 reportes activos actualmente.</p>
+    
+  </section>
+
+  <!-- SECCIÓN: BENEFICIOS -->
+  <section class="beneficios fade-in-up">
+    <h2 class="beneficios-titulo">Beneficios de AlertiBot</h2>
+    <ul class="beneficios-lista anim-cascade">
+      <li class="beneficio-item">
+        <i class="fas fa-info-circle"></i>
+        <span class="beneficio-titulo">Información al Instante</span>
+        <span class="beneficio-desc">Datos reales y geolocalizados cuando más lo necesitas.</span>
+      </li>
+      <li class="beneficio-item">
+        <i class="fas fa-users"></i>
+        <span class="beneficio-titulo">Solidaridad Vecinal</span>
+        <span class="beneficio-desc">Cada reporte es un acto de ayuda.</span>
+      </li>
+      <li class="beneficio-item">
+        <i class="fas fa-shield-alt"></i>
+        <span class="beneficio-titulo">Prevención y Seguridad</span>
+        <span class="beneficio-desc">Planifica tus rutas y protege tu patrimonio.</span>
+      </li>
+      <li class="beneficio-item">
+        <i class="fas fa-hand-holding-heart"></i>
+        <span class="beneficio-titulo">Totalmente Gratuito</span>
+        <span class="beneficio-desc">Una iniciativa comunitaria sin costos ni suscripciones.</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="footer fade-in-up" id="acerca">
+    <div class="footer-contenido">
+      <img src="img/logo.jpg.png" alt="Logo del Proyecto" class="footer-logo">
+      <nav class="footer-nav">
+        <a href="#">Acerca de Nosotros</a>
+        <a href="#">Preguntas Frecuentes</a>
+        <a href="#">Contacto</a>
+        <a href="#">Política de Privacidad</a>
+      </nav>
+      <div class="redes">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-telegram"></i></a>
+      </div>
+    </div>
+    <p class="copyright">
+      Un proyecto comunitario para la seguridad estudiantil de Chimalhuacán. &copy; 2025
+    </p>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <!-- Estilos de animación conservados en estilo.css -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- Weather API: Open-Meteo (no key required) -->
+  <script>
+    // Función para formatear fecha y hora local
+    function formatearFechaHora(fecha) {
+      return fecha.toLocaleDateString('es-MX', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' }) +
+        ' ' + fecha.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+    }
+    // Coordenadas de Chimalhuacán
+    const lat = 19.4167, lon = -98.9500;
+    // Llamada a Open-Meteo para clima actual y pronóstico
+    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=temperature_2m,weathercode&timezone=auto`)
+      .then(r => r.json())
+      .then(data => {
+        // Clima actual
+        if(data.current_weather) {
+          document.getElementById('clima-temp').textContent = `${Math.round(data.current_weather.temperature)}°C`;
+          document.getElementById('clima-desc').textContent = weatherCodeToDesc(data.current_weather.weathercode);
+          document.getElementById('clima-icon').textContent = weatherIcon(data.current_weather.weathercode);
+        }
+        // Fecha y hora local
+        document.getElementById('clima-fecha').textContent = formatearFechaHora(new Date());
+        // Mini pronóstico (próximas 3 horas)
+        if(data.hourly && data.hourly.time) {
+          const now = new Date();
+          let html = '';
+          for(let i=0, count=0; i<data.hourly.time.length && count<3; i++) {
+            const hora = new Date(data.hourly.time[i]);
+            if(hora > now) {
+              html += `<div style='text-align:center; background:rgba(255,255,255,0.85); border-radius:10px; box-shadow:0 1px 6px #2563eb22; padding:7px 10px 6px 10px; min-width:56px;'>
+                <div style='font-size:1.5rem; margin-bottom:2px;'>${weatherIcon(data.hourly.weathercode[i])}</div>
+                <div style='font-size:1.13rem; color:#2563eb; font-weight:700;'>${Math.round(data.hourly.temperature_2m[i])}°C</div>
+                <div style='font-size:0.93rem; color:#1e293b; margin-top:2px;'>${hora.getHours()}:00</div>
+              </div>`;
+              count++;
+            }
+          }
+          document.getElementById('clima-mini-pronostico').innerHTML = html;
+        }
+      });
+    // Traducción de weathercode a descripción
+    function weatherCodeToDesc(code) {
+      const map = {
+        0: 'Despejado', 1: 'Principalmente despejado', 2: 'Parcialmente nublado', 3: 'Nublado',
+        45: 'Niebla', 48: 'Niebla', 51: 'Llovizna ligera', 53: 'Llovizna', 55: 'Llovizna intensa',
+        61: 'Lluvia ligera', 63: 'Lluvia', 65: 'Lluvia intensa', 71: 'Nieve ligera', 73: 'Nieve', 75: 'Nieve intensa',
+        80: 'Chubascos ligeros', 81: 'Chubascos', 82: 'Chubascos intensos', 95: 'Tormenta', 96: 'Tormenta leve', 99: 'Tormenta fuerte'
+      };
+      return map[code] || 'Desconocido';
+    }
+    // Iconos simples para el mini pronóstico
+    function weatherIcon(code) {
+      if([0,1].includes(code)) return '☀️';
+      if([2,3].includes(code)) return '⛅';
+      if([45,48].includes(code)) return '🌫️';
+      if([51,53,55,61,63,65,80,81,82].includes(code)) return '🌧️';
+      if([71,73,75].includes(code)) return '❄️';
+      if([95,96,99].includes(code)) return '⛈️';
+      return '❔';
+    }
+  </script>
+  <script>
+    const map = L.map('map').setView([19.4167, -98.9500], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+    }).addTo(map);
+
+    // Ejemplo de marcador fijo
+    L.marker([19.4167, -98.9500]).addTo(map).bindPopup('Ejemplo de reporte').openPopup();
+
+
+    // --- INICIO: Cargar reportes dinámicos desde PHP y mostrar círculos de nivel ---
+    fetch('obtener_reportes.php')
+      .then(response => response.json())
+      .then(data => {
+        data.forEach(reporte => {
+          const color = obtenerColorPorNivel(reporte.nivel);
+          L.circle([reporte.latitud, reporte.longitud], {
+            color: color,
+            fillColor: color,
+            fillOpacity: 0.5,
+            radius: 100  // 100 metros
+          }).addTo(map).bindPopup(`Nivel de Inundación: ${reporte.nivel}`);
+        });
+      });
+
+    function obtenerColorPorNivel(nivel) {
+      switch(nivel) {
+        case 'Muy Bajo': return 'green';
+        case 'Bajo': return 'yellow';
+        case 'Medio': return 'orange';
+        case 'Alto': return 'red';
+        case 'Muy Alto': return '#8B0000'; // rojo oscuro
+        default: return 'gray';
+      }
+    }
+    // --- FIN: Cargar reportes dinámicos ---
+
+    // --- INICIO: Cargar alertas y mostrar triángulos de riesgo ---
+    fetch('obtener_alertas.php')
+      .then(response => response.json())
+      .then(alertas => {
+        alertas.forEach(alerta => {
+          const color = colorPorNivelRiesgo(alerta.nivel_riesgo);
+          const lat = alerta.latitud;
+          const lng = alerta.longitud;
+          // Triángulo pequeño
+          const size = 32; // metros
+          const triangle = [
+            [lat + metersToLat(size), lng],
+            [lat - metersToLat(size/2), lng - metersToLng(size/1.2, lat)],
+            [lat - metersToLat(size/2), lng + metersToLng(size/1.2, lat)]
+          ];
+          L.polygon(triangle, {
+            color: color,
+            fillColor: color,
+            fillOpacity: 0.95,
+            weight: 2
+          }).addTo(map).bindPopup(`Nivel de Riesgo: ${alerta.nivel_riesgo}`);
+        });
+      });
+
+    function colorPorNivelRiesgo(nivel) {
+      switch(nivel) {
+        case 'Bajo':
+          return '#ffffff'; // Blanco puro
+        case 'Medio':
+          return '#0099ff'; // Azul brillante
+        case 'Alto':
+          return '#a259e6'; // Morado vibrante
+        default:
+          return '#bbbbbb'; // Gris claro para otros casos
+      }
+    }
+    // Utilidades para convertir metros a lat/lng
+    function metersToLat(m) {
+      return m / 111320;
+    }
+    function metersToLng(m, lat) {
+      return m / (40075000 * Math.cos(lat * Math.PI / 180) / 360);
+    }
+    // --- FIN: Cargar alertas ---
+
+    // Expansión y contracción del mapa
+    const mapaDiv = document.getElementById("map");
+    const expandirBtn = document.getElementById("expandir-mapa");
+    const contraerBtn = document.getElementById("contraer-mapa");
+    let mapaExpandido = false;
+
+    function expandirMapa() {
+      mapaDiv.classList.add("mapa-expandido");
+      document.body.classList.add("mapa-expandido-activo");
+      expandirBtn.style.display = "none";
+      contraerBtn.style.display = "block";
+      mapaExpandido = true;
+      setTimeout(() => { map.invalidateSize(); }, 350);
+    }
+    function contraerMapa() {
+      mapaDiv.classList.remove("mapa-expandido");
+      document.body.classList.remove("mapa-expandido-activo");
+      expandirBtn.style.display = "inline-block";
+      contraerBtn.style.display = "none";
+      mapaExpandido = false;
+      setTimeout(() => { map.invalidateSize(); }, 350);
+    }
+
+    // Carrusel automático y manual con animación de deslizamiento
+    let index = 0;
+    const items = document.querySelectorAll('.carousel-inner .carousel-item');
+    const prevBtn = document.querySelector('.carousel-control.prev');
+    const nextBtn = document.querySelector('.carousel-control.next');
+    let autoInterval;
+    let animating = false;
+
+    function showCarouselItem(idx, direction = 1) {
+      items.forEach((item, i) => {
+        if (i === idx) {
+          item.style.display = 'flex';
+          item.style.zIndex = 2;
+          item.style.opacity = '0';
+          item.style.transform = `scale(0.92) translateX(${direction * 120}px) rotateY(${direction * 30}deg)`;
+          setTimeout(() => {
+            item.style.transition = 'opacity 0.8s cubic-bezier(.4,0,.2,1), transform 0.8s cubic-bezier(.4,0,.2,1)';
+            item.style.opacity = '1';
+            item.style.transform = 'scale(1) translateX(0) rotateY(0)';
+          }, 10);
+          item.classList.add('active');
+        } else {
+          item.style.transition = 'opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1)';
+          item.style.opacity = '0';
+          item.style.transform = `scale(0.92) translateX(${-direction * 120}px) rotateY(${-direction * 30}deg)`;
+          setTimeout(() => {
+            item.style.display = 'none';
+            item.style.zIndex = 1;
+          }, 700);
+          item.classList.remove('active');
+        }
+      });
+    }
+    function nextCarousel() {
+      const prev = index;
+      index = (index + 1) % items.length;
+      showCarouselItem(index, 1);
+    }
+    function prevCarousel() {
+      const prev = index;
+      index = (index - 1 + items.length) % items.length;
+      showCarouselItem(index, -1);
+    }
+    function resetAutoCarousel() {
+      clearInterval(autoInterval);
+      autoInterval = setInterval(nextCarousel, 3500);
+    }
+    if (prevBtn && nextBtn) {
+      prevBtn.onclick = () => { prevCarousel(); resetAutoCarousel(); };
+      nextBtn.onclick = () => { nextCarousel(); resetAutoCarousel(); };
+    }
+    autoInterval = setInterval(nextCarousel, 3500);
+    showCarouselItem(index, 1);
+  </script>
+
+</body>
+</html>
+
+
+</body>
+
+</html>
