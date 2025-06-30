@@ -1,4 +1,5 @@
 /* ===================== ANIMACIONES DE ENTRADA ===================== */
+/* Animaciones de entrada con movimiento */
 .fade-in {
   opacity: 0;
   animation: fadeInMove 1.1s cubic-bezier(.4,0,.2,1) forwards;

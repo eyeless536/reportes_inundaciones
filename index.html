@@ -23,7 +23,7 @@
   <div class="acciones-botones-banner">
     <nav class="botones">
       <a href="#mapa" class="btn btn-principal">Ver Mapa en Vivo</a>
-      <a href="https://t.me/tu_canal_telegram" target="_blank" class="btn btn-telegram">Unirme al Canal de Alertas (AlertiBot)</a>
+      <a href="https://t.me/AlerTESCHI_bot" target="_blank" class="btn btn-telegram">Unirme al Canal de Alertas (AlertiBot)</a>
     </nav>
   </div>
 
@@ -199,7 +199,7 @@
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <!-- Weather API: Open-Meteo (no key required) -->
   <script>
-    // Función para formatear fecha y hora local
+    // Función para formatear fecha y hora local (para el cuadro de clima)
     function formatearFechaHora(fecha) {
       return fecha.toLocaleDateString('es-MX', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' }) +
         ' ' + fecha.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
@@ -236,7 +236,7 @@
           document.getElementById('clima-mini-pronostico').innerHTML = html;
         }
       });
-    // Traducción de weathercode a descripción
+    // Traducción de weathercode a descripción (para mostrar texto del clima)
     function weatherCodeToDesc(code) {
       const map = {
         0: 'Despejado', 1: 'Principalmente despejado', 2: 'Parcialmente nublado', 3: 'Nublado',
@@ -258,16 +258,20 @@
     }
   </script>
   <script>
+    // --- INICIO: MAPA INTERACTIVO PRINCIPAL (Leaflet) ---
+    // Inicializa el mapa centrado en Chimalhuacán
     const map = L.map('map').setView([19.4167, -98.9500], 13);
+    // Capa base de OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
     }).addTo(map);
 
-    // Ejemplo de marcador fijo
+    // Ejemplo de marcador fijo (puedes eliminarlo si no lo necesitas)
     L.marker([19.4167, -98.9500]).addTo(map).bindPopup('Ejemplo de reporte').openPopup();
 
 
     // --- INICIO: Cargar reportes dinámicos desde PHP y mostrar círculos de nivel ---
+    // Obtiene los reportes de inundación y los muestra como círculos de color según nivel
     fetch('obtener_reportes.php')
       .then(response => response.json())
       .then(data => {
@@ -295,6 +299,7 @@
     // --- FIN: Cargar reportes dinámicos ---
 
     // --- INICIO: Cargar alertas y mostrar triángulos de riesgo ---
+    // Obtiene las alertas y las muestra como triángulos de color según nivel de riesgo
     fetch('obtener_alertas.php')
       .then(response => response.json())
       .then(alertas => {
@@ -318,6 +323,7 @@
         });
       });
 
+    // Devuelve el color correspondiente al nivel de riesgo de la alerta
     function colorPorNivelRiesgo(nivel) {
       switch(nivel) {
         case 'Bajo':
@@ -331,6 +337,7 @@
       }
     }
     // Utilidades para convertir metros a lat/lng
+    // Utilidades para convertir metros a grados latitud/longitud (para dibujar triángulos en el mapa)
     function metersToLat(m) {
       return m / 111320;
     }
@@ -339,12 +346,13 @@
     }
     // --- FIN: Cargar alertas ---
 
-    // Expansión y contracción del mapa
+    // --- INICIO: Expansión y contracción del mapa (pantalla completa) ---
     const mapaDiv = document.getElementById("map");
     const expandirBtn = document.getElementById("expandir-mapa");
     const contraerBtn = document.getElementById("contraer-mapa");
     let mapaExpandido = false;
 
+    // Expande el mapa a pantalla completa
     function expandirMapa() {
       mapaDiv.classList.add("mapa-expandido");
       document.body.classList.add("mapa-expandido-activo");
@@ -353,6 +361,7 @@
       mapaExpandido = true;
       setTimeout(() => { map.invalidateSize(); }, 350);
     }
+    // Contrae el mapa a su tamaño original
     function contraerMapa() {
       mapaDiv.classList.remove("mapa-expandido");
       document.body.classList.remove("mapa-expandido-activo");
@@ -362,7 +371,8 @@
       setTimeout(() => { map.invalidateSize(); }, 350);
     }
 
-    // Carrusel automático y manual con animación de deslizamiento
+    // --- INICIO: Carrusel de imágenes con animación de deslizamiento ---
+    // Controla el carrusel de imágenes: animación, navegación y autoavance
     let index = 0;
     const items = document.querySelectorAll('.carousel-inner .carousel-item');
     const prevBtn = document.querySelector('.carousel-control.prev');
@@ -370,6 +380,7 @@
     let autoInterval;
     let animating = false;
 
+    // Muestra el item del carrusel correspondiente y aplica animación de transición
     function showCarouselItem(idx, direction = 1) {
       items.forEach((item, i) => {
         if (i === idx) {
@@ -395,16 +406,19 @@
         }
       });
     }
+    // Muestra la siguiente imagen del carrusel
     function nextCarousel() {
       const prev = index;
       index = (index + 1) % items.length;
       showCarouselItem(index, 1);
     }
+    // Muestra la imagen anterior del carrusel
     function prevCarousel() {
       const prev = index;
       index = (index - 1 + items.length) % items.length;
       showCarouselItem(index, -1);
     }
+    // Reinicia el temporizador de autoavance del carrusel
     function resetAutoCarousel() {
       clearInterval(autoInterval);
       autoInterval = setInterval(nextCarousel, 3500);
